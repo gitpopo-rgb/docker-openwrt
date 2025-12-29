@@ -1,0 +1,72 @@
+name: Build OpenWrt Image
+
+on:
+  push:
+    branches: ["**"]
+    tags: ["**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compute version and build args
+        id: vars
+        shell: bash
+        run: |
+          set -e
+          REF_TYPE="${GITHUB_REF_TYPE}"
+          REF_NAME="${GITHUB_REF_NAME}"
+
+          VERSION=""
+          CANDIDATE="$REF_NAME"
+
+          # 仅接受形如 X.Y.Z 的版本号（例如 24.10.5）；否则视为获取失败
+          if [[ "$CANDIDATE" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            VERSION="$CANDIDATE"
+          fi
+
+          if [[ -z "$VERSION" ]]; then
+            IMAGE_TAG="24.10.5"
+            BUILD_ARGS=""
+            echo "No valid version detected. Using default tag $IMAGE_TAG and no OPENWRT_VERSION build-arg."
+          else
+            IMAGE_TAG="$VERSION"
+            BUILD_ARGS="--build-arg OPENWRT_VERSION=$VERSION"
+            echo "Using version $VERSION for OPENWRT_VERSION and image tag."
+          fi
+
+          echo "IMAGE_TAG=$IMAGE_TAG" >> "$GITHUB_ENV"
+          echo "BUILD_ARGS=$BUILD_ARGS" >> "$GITHUB_ENV"
+
+      - name: Build Docker image
+        shell: bash
+        run: |
+          set -e
+          echo "Building image docker-openwrt:$IMAGE_TAG"
+          docker build $BUILD_ARGS -t docker-openwrt:$IMAGE_TAG .
+
+      - name: Log in to GitHub Container Registry
+        if: always()
+        env:
+          GHCR_USER: ${{ github.actor }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
+
+      - name: Tag and push to ghcr.io
+        shell: bash
+        run: |
+          set -e
+          IMAGE="ghcr.io/${{ github.repository }}"
+          echo "Tagging $IMAGE:$IMAGE_TAG"
+          docker tag docker-openwrt:$IMAGE_TAG $IMAGE:$IMAGE_TAG
+          echo "Pushing $IMAGE:$IMAGE_TAG"
+          docker push $IMAGE:$IMAGE_TAG
