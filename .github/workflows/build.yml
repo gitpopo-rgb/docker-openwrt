@@ -35,7 +35,7 @@ jobs:
 
           if [[ -z "$VERSION" ]]; then
             IMAGE_TAG="24.10.5"
-            BUILD_ARGS=""
+            BUILD_ARGS="--build-arg OPENWRT_VERSION=$IMAGE_TAG"
             echo "No valid version detected. Using default tag $IMAGE_TAG and no OPENWRT_VERSION build-arg."
           else
             IMAGE_TAG="$VERSION"
