@@ -25,7 +25,7 @@ RUN curl -L -o luci-i18n-passwall-zh-cn.ipk "https://github.com/xiaorouji/openwr
 RUN curl -L -o passwall_packages_ipk_x86_64.zip "https://github.com/xiaorouji/openwrt-passwall/releases/download/${PASSWALL_VERSION}/passwall_packages_ipk_x86_64.zip"; 
 RUN ls *
 RUN unzip passwall_packages_ipk_x86_64.zip -d .
-RUN ls -1 *.ipk | grep -E 'tcping|geoview' | xargs -I {} opkg "{}" 
+RUN ls -1 *.ipk | grep -E 'tcping|geoview' | xargs -I {} opkg install "{}" 
 RUN opkg install luci-app-passwall.ipk luci-i18n-passwall-zh-cn.ipk
 
 # 清理
