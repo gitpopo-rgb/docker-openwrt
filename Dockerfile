@@ -15,7 +15,7 @@ RUN mkdir /var/lock/
 RUN opkg update 
 RUN opkg list-upgradable | cut -f 1 -d ' ' | xargs -r opkg upgrade
 RUN opkg remove dnsmasq 
-RUN opkg install dnsmasq-full chinadns-ng dns2socks iptables-mod-tproxy iptables-mod-socket iptables-mod-iprange curl unzip ca-certificates
+RUN opkg install dnsmasq-full iptables-mod-tproxy iptables-mod-socket iptables-mod-iprange curl unzip ca-certificates
 
 # 安装passwall（在构建阶段动态获取最新版本）
 
@@ -25,7 +25,7 @@ RUN set -e && \
     curl -L -o luci-i18n-passwall-zh-cn.ipk "https://github.com/xiaorouji/openwrt-passwall/releases/download/${PASSWALL_VERSION}/luci-i18n-passwall-zh-cn_${PASSWALL_IPK_VERSION}_all.ipk" && \
     curl -L -o passwall_packages_ipk_x86_64.zip "https://github.com/xiaorouji/openwrt-passwall/releases/download/${PASSWALL_VERSION}/passwall_packages_ipk_x86_64.zip" && \
     unzip passwall_packages_ipk_x86_64.zip -d . 
-RUN    ls -1 *.ipk | grep -E 'tcping|geoview' | xargs -r opkg install 
+RUN    ls -1 *.ipk | grep -E 'tcping|geoview|chinadns-ng|dns2socks' | xargs -r opkg install 
 RUN    opkg install luci-app-passwall.ipk luci-i18n-passwall-zh-cn.ipk
 
 # 清理
