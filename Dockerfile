@@ -16,16 +16,16 @@ RUN opkg remove dnsmasq
 RUN opkg install dnsmasq-full iptables-mod-tproxy iptables-mod-socket iptables-mod-iprange curl unzip ca-certificates
 
 # 安装passwall（在构建阶段动态获取最新版本）
-RUN set -e; \
-	PASSWALL_VERSION=$(curl -s https://api.github.com/repos/xiaorouji/openwrt-passwall/releases/latest | grep '"tag_name":' | cut -d '"' -f4); \
-	PASSWALL_IPK_VERSION=${PASSWALL_VERSION%%-*}; \
-	echo "Get the passwall latest version: ${PASSWALL_VERSION}, ${PASSWALL_IPK_VERSION}"; \
-	curl -L -o luci-app-passwall.ipk "https://github.com/xiaorouji/openwrt-passwall/releases/download/${PASSWALL_VERSION}/luci-app-passwall-${PASSWALL_IPK_VERSION}-r1.ipk"; \
-	curl -L -o luci-i18n-passwall-zh-cn.ipk "https://github.com/xiaorouji/openwrt-passwall/releases/download/${PASSWALL_VERSION}/luci-i18n-passwall-zh-cn-${PASSWALL_IPK_VERSION}.ipk"; \
-	curl -L -o passwall_packages_ipk_x86_64.zip "https://github.com/xiaorouji/openwrt-passwall/releases/download/${PASSWALL_VERSION}/passwall_packages_ipk_x86_64.zip"; \
-	unzip passwall_packages_ipk_x86_64.zip .; \
-	ls -1 *.ipk | grep -E 'tcping|geoview' | xargs -I {} opkg "{}" \
-	opkg install luci-app-passwall.ipk luci-i18n-passwall-zh-cn.ipk
+RUN set -e;
+ARG PASSWALL_VERSION=$(curl -s https://api.github.com/repos/xiaorouji/openwrt-passwall/releases/latest | grep '"tag_name":' | cut -d '"' -f4); 
+ARG PASSWALL_IPK_VERSION=${PASSWALL_VERSION%%-*}; 
+RUN	echo "Get the passwall latest version: ${PASSWALL_VERSION}, ${PASSWALL_IPK_VERSION}"; 
+RUN curl -L -o luci-app-passwall.ipk "https://github.com/xiaorouji/openwrt-passwall/releases/download/${PASSWALL_VERSION}/luci-app-passwall-${PASSWALL_IPK_VERSION}-r1.ipk"; 
+RUN curl -L -o luci-i18n-passwall-zh-cn.ipk "https://github.com/xiaorouji/openwrt-passwall/releases/download/${PASSWALL_VERSION}/luci-i18n-passwall-zh-cn-${PASSWALL_IPK_VERSION}.ipk"; 
+RUN curl -L -o passwall_packages_ipk_x86_64.zip "https://github.com/xiaorouji/openwrt-passwall/releases/download/${PASSWALL_VERSION}/passwall_packages_ipk_x86_64.zip"; 
+RUN unzip passwall_packages_ipk_x86_64.zip .; 
+RUN ls -1 *.ipk | grep -E 'tcping|geoview' | xargs -I {} opkg "{}" 
+RUN opkg install luci-app-passwall.ipk luci-i18n-passwall-zh-cn.ipk
 
 # 清理
 RUN rm -rf /var/cache/opkg/* \
