@@ -1,6 +1,7 @@
 ARG OPENWRT_VERSION=24.10.5
 
 FROM scratch
+ARG OPENWRT_VERSION=24.10.5
 ADD https://downloads.openwrt.org/releases/${OPENWRT_VERSION}/targets/x86/64/openwrt-${OPENWRT_VERSION}-x86-64-generic-ext4-rootfs.img.gz /
 
 
