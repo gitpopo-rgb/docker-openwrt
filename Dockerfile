@@ -1,12 +1,14 @@
 ARG OPENWRT_VERSION=24.10.5
 
-FROM scratch
-ARG OPENWRT_VERSION=24.10.5
-ADD https://downloads.openwrt.org/releases/${OPENWRT_VERSION}/targets/x86/64/openwrt-${OPENWRT_VERSION}-x86-64-generic-ext4-rootfs.img.gz /
+FROM ghcr.io/openwrt/rootfs:x86_64-${OPENWRT_VERSION}
 
+# 设置时区为上海
+RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+# 设置语言为中文
+RUN echo "export LANG=zh_CN.UTF-8" >> /etc/profile
 
 # 更新源为aliyun的openwrt源
-# RUN sed -i 's_downloads.openwrt.org_mirrors.aliyun.com/openwrt_' /etc/opkg/distfeeds.conf \
+RUN sed -i 's_downloads.openwrt.org_mirrors.aliyun.com/openwrt_' /etc/opkg/distfeeds.conf \
 RUN apk update 
 RUN apk upgrade 
 RUN apk remove dnsmasq 
