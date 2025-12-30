@@ -16,7 +16,7 @@ RUN set -e && \
     opkg update && \
     opkg list-upgradable | cut -f 1 -d ' ' | xargs -r opkg upgrade && \
     opkg remove dnsmasq && \
-    opkg install dnsmasq-full iptables-mod-tproxy iptables-mod-socket iptables-mod-iprange curl unzip ca-certificates
+    opkg install dnsmasq-full kmod-nft-socket kmod-nft-tproxy iptables-mod-tproxy iptables-mod-socket iptables-mod-iprange curl unzip ca-certificates
 
 # 安装 Passwall（下载、安装、清理一次完成）
 RUN set -e && \
@@ -27,7 +27,7 @@ RUN set -e && \
     unzip passwall_packages_ipk_x86_64.zip -d . && \
     ls -1 *.ipk | grep -E 'tcping|geoview|chinadns-ng|dns2socks' | xargs -r opkg install && \
     opkg install luci-app-passwall.ipk luci-i18n-passwall-zh-cn.ipk && \
-    rm -f passwall_packages_ipk_x86_64.zip luci-app-passwall.ipk luci-i18n-passwall-zh-cn.ipk
+    rm -f passwall_packages_ipk_x86_64.zip *.ipk
 
 EXPOSE 53 80 443
 ENTRYPOINT ["/sbin/init"]
