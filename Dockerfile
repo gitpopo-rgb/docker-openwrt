@@ -11,7 +11,7 @@ RUN echo "export LANG=zh_CN.UTF-8" >> /etc/profile
 RUN sed -i 's_downloads.openwrt.org_mirrors.aliyun.com/openwrt_' /etc/opkg/distfeeds.conf
 RUN mkdir /var/lock/
 RUN opkg update 
-RUN opkg upgrade 
+RUN opkg list-upgradable | cut -f 1 -d ' ' | xargs -r opkg upgrade
 RUN opkg remove dnsmasq 
 RUN opkg install dnsmasq-full iptables-mod-tproxy iptables-mod-socket iptables-mod-iprange
 
