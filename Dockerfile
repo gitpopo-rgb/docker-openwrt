@@ -17,8 +17,8 @@ RUN opkg install dnsmasq-full iptables-mod-tproxy iptables-mod-socket iptables-m
 
 # 安装passwall（在构建阶段动态获取最新版本）
 RUN set -e;
-ARG PASSWALL_VERSION=$(curl -s https://api.github.com/repos/xiaorouji/openwrt-passwall/releases/latest | grep '"tag_name":' | cut -d '"' -f4); 
-ARG PASSWALL_IPK_VERSION=${PASSWALL_VERSION%%-*}; 
+ARG PASSWALL_VERSION 
+ARG PASSWALL_IPK_VERSION 
 RUN	echo "Get the passwall latest version: ${PASSWALL_VERSION}, ${PASSWALL_IPK_VERSION}"; 
 RUN curl -L -o luci-app-passwall.ipk "https://github.com/xiaorouji/openwrt-passwall/releases/download/${PASSWALL_VERSION}/luci-app-passwall-${PASSWALL_IPK_VERSION}-r1.ipk"; 
 RUN curl -L -o luci-i18n-passwall-zh-cn.ipk "https://github.com/xiaorouji/openwrt-passwall/releases/download/${PASSWALL_VERSION}/luci-i18n-passwall-zh-cn-${PASSWALL_IPK_VERSION}.ipk"; 
