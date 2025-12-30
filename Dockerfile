@@ -9,6 +9,7 @@ RUN echo "export LANG=zh_CN.UTF-8" >> /etc/profile
 
 # 更新源为aliyun的openwrt源
 RUN sed -i 's_downloads.openwrt.org_mirrors.aliyun.com/openwrt_' /etc/opkg/distfeeds.conf
+RUN mkdir /var/lock/
 RUN opkg update 
 RUN opkg upgrade 
 RUN opkg remove dnsmasq 
