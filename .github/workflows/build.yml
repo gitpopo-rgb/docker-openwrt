@@ -52,6 +52,7 @@ jobs:
         run: |
           set -e
           echo "Building image docker-openwrt:$IMAGE_TAG"
+          echo "Build args: $BUILD_ARGS"
           docker build $BUILD_ARGS -t docker-openwrt:$IMAGE_TAG .
 
       - name: Log in to GitHub Container Registry
