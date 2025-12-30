@@ -29,8 +29,7 @@ RUN    ls -1 *.ipk | grep -E 'tcping|geoview|chinadns-ng|dns2socks' | xargs -r o
 RUN    opkg install luci-app-passwall.ipk luci-i18n-passwall-zh-cn.ipk
 
 # 清理
-RUN rm -rf /tmp/* \
-&& rm -f passwall_packages_ipk_x86_64.zip \
+RUN rm -f passwall_packages_ipk_x86_64.zip \
 && rm -f luci-app-passwall.ipk \
 && rm -f luci-i18n-passwall-zh-cn.ipk
 
