@@ -15,7 +15,7 @@ RUN mkdir /var/lock/
 RUN opkg update 
 RUN opkg list-upgradable | cut -f 1 -d ' ' | xargs -r opkg upgrade
 RUN opkg remove dnsmasq 
-RUN opkg install dnsmasq-full iptables-mod-tproxy iptables-mod-socket iptables-mod-iprange curl unzip ca-certificates
+RUN opkg install dnsmasq-full chinadns-ng dns2socks iptables-mod-tproxy iptables-mod-socket iptables-mod-iprange curl unzip ca-certificates
 
 # 安装passwall（在构建阶段动态获取最新版本）
 
