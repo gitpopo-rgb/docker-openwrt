@@ -36,7 +36,7 @@ jobs:
           if [[ -z "$VERSION" ]]; then
             IMAGE_TAG="24.10.5"
             BUILD_ARGS="--build-arg OPENWRT_VERSION=24.10.5"
-            echo "No valid version detected. Using default tag $IMAGE_TAG and defaultOPENWRT_VERSION build-arg."
+            echo "No valid version detected. Using default tag $IMAGE_TAG and default $OPENWRT_VERSION build-arg."
           else
             IMAGE_TAG="$VERSION"
             BUILD_ARGS="--build-arg OPENWRT_VERSION=$VERSION"
@@ -45,6 +45,7 @@ jobs:
 
           echo "IMAGE_TAG=$IMAGE_TAG" >> "$GITHUB_ENV"
           echo "BUILD_ARGS=$BUILD_ARGS" >> "$GITHUB_ENV"
+          cat $GITHUB_ENV
 
       - name: Build Docker image
         shell: bash
